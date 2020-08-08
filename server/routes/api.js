@@ -3,7 +3,7 @@ const User = require('../models/user')
 const router = express.Router()
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
-const db = "mongodb+srv://masoom:arkham@cluster0.aedf2.mongodb.net/EventsDB?retryWrites=true&w=majority"
+const db = "mongodb+srv://masoom1:thelastone@cluster0.aedf2.mongodb.net/EventsDB?retryWrites=true&w=majority"
 
 
 
