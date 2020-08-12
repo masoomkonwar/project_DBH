@@ -1,9 +1,10 @@
 const express = require('express')
 const User = require('../models/user')
+const Job = require('../models/Jobs')
 const router = express.Router()
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
-const db = "mongodb+srv://masoom:arkham@cluster0.aedf2.mongodb.net/EventsDB?retryWrites=true&w=majority"
+const db = "mongodb+srv://masoom1:thelastone@cluster0.aedf2.mongodb.net/EventsDB?retryWrites=true&w=majority"
 
 
 
@@ -31,6 +32,21 @@ router.post('/register',(req,res)=>{
             let payload = {subject: registeredUser._id}
             let token = jwt.sign(payload,'secretKey')
             res.status(200).send({token})
+        }
+    })
+
+})
+router.post('/updatejobs',(req,res)=>{
+    let jobData = req.body
+    let job = new Job(jobData)
+    console.log(job)
+    job.save((error,registeredJob)=>{
+        if(error)
+        {
+            console.log(error)
+        }else{
+        
+            res.status(200).send(registeredJob)
         }
     })
 
@@ -87,34 +103,19 @@ router.get('/events',(req,res)=>{
     res.json(events)
 })
 router.get('/special',verifyTocken,(req,res)=>{
-    let events = [
+    let events = []
+    Job.find({},(err,jobs)=>{
+        if(err)
         {
-            "id": "1",
-            "name" : "tony" ,
-            "identity" : "iron man",
-        },
-        {
-            "id": "1",
-            "name" : "bruce" ,
-            "identity" : "hulk",
-        },
-        {
-            "id": "1",
-            "name" : "steeve" ,
-            "identity" : "captain america",
-        },
-        {
-            "id": "1",
-            "name" : "peter" ,
-            "identity" : "spiderman",
-        },
-        {
-            "id": "1",
-            "name" : "natasha" ,
-            "identity" : "black widow",
+            console.log(err)
         }
-    ]
-    res.json(events)
+        else{
+            events = jobs
+            console.log(jobs)
+            res.json(events)
+        }
+    })
+    
 })
 function verifyTocken(req,res,next)
 {

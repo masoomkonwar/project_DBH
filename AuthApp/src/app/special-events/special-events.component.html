@@ -1,10 +1,38 @@
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="card text-center">
+            <div class="card-header">
+                ENTER A JOB
+            </div>
+            <div class="card-body">
+                <form  #userForm="ngForm">
+
+                    {{userForm.value|json}}
+                    <hr/>
+                    {{jobModel|json}}
+                    <select class="custom-select" name="jobtype" [(ngModel)]="jobModel.jobtype">
+                        <option value=" " selected>Job Type</option>
+                        <option *ngFor="let item of jobstypes">{{item}}</option>
+                    </select>
+                    <textarea [(ngModel)]="jobModel.jobdesc" name="desc"  cols="50" rows="2" class="form-control" placeholder="describe the job"></textarea>
+                </form>
+                
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-success " (click)="addToEvents()">POST THE JOB</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row mt-5">
     <div class="col-md-5 mb3" *ngFor="let event of specialEvents">
         <div class="card text-center">
             <div class="card-body">
-                <h5 class="card-title">{{event.name}}</h5>
-                <p class="card-text">{{event.identity}}</p>
-                <a href="#" class="btn btn-primary">BUY TICKETS</a>
+                <h5 class="card-title">{{event.jobtype}}</h5>
+                <p class="card-text">{{event.jobdesc}}</p>
+                <a href="#" class="btn btn-primary">ACCEPT THE JOB</a>
 
             </div>
             <div class="class-footer text-muted">

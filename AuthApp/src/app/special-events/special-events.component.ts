@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { EventsService } from '../events.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import {Jobdetails}from '../jobdetails'
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-special-events',
@@ -10,7 +12,9 @@ import { Router } from '@angular/router';
 })
 export class SpecialEventsComponent implements OnInit {
   specialEvents = []
-  constructor(private _event :EventsService,private _router:Router) { }
+  jobstypes = ['webdevelopment','app development','painting','']
+  jobModel = new Jobdetails('website','design a website')
+  constructor(private _event :EventsService,private _router:Router,private _auth:AuthService) { }
 
   ngOnInit(): void {
     this._event.getSpecialEvents().subscribe(
@@ -29,6 +33,15 @@ export class SpecialEventsComponent implements OnInit {
   showevents()
   {
     console.log(this.specialEvents)
+  }
+  addToEvents(){
+    this.specialEvents.push(this.jobModel)
+    console.log(this.specialEvents)
+    this._auth.updateJobs(this.jobModel).subscribe(
+      res=> {console.log(res)},
+      err=>console.log(err)
+      
+    )
   }
 
 }
