@@ -1,6 +1,7 @@
 const express = require('express')
 const User = require('../models/user')
 const Job = require('../models/Jobs')
+const Developers = require('../models/developers')
 const router = express.Router()
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
@@ -36,6 +37,21 @@ router.post('/register',(req,res)=>{
     })
 
 })
+router.post('/registerDev',(req,res)=>{
+    let userData = req.body
+    let dev = new Developers(userData)
+    dev.save((error,registeredUser)=>{
+        if(error)
+        {
+            console.log(error)
+        }else{
+            let payload = {subject: registeredUser._id}
+            let token = jwt.sign(payload,'secretKey')
+            res.status(200).send({token})
+        }
+    })
+
+})
 router.post('/updatejobs',(req,res)=>{
     let jobData = req.body
     let job = new Job(jobData)
@@ -53,6 +69,7 @@ router.post('/updatejobs',(req,res)=>{
 })
 router.post('/login',(req,res)=>{
     let userData =req.body
+    let sendableData = {email:String,token:String}
     User.findOne({email:userData.email},(err,user)=>{
         if(err){
             console.log(err)
@@ -66,7 +83,44 @@ router.post('/login',(req,res)=>{
             }else{
                 let payload = {subject: user._id}
                 let token = jwt.sign(payload,'secretKey')
-                res.status(200).send({token})
+                //console.log(token)
+                //
+                //res.status(200).json(user)
+                sendableData.email=user.email
+                sendableData.token=token
+                console.log(sendableData)
+                res.status(200).send({sendableData})
+                //res.status(200).json(user)
+
+            }
+        }
+    })
+})
+router.post('/loginDev',(req,res)=>{
+    let userData =req.body
+    let sendableData = {email:String,token:String}
+    Developers.findOne({email:userData.email},(err,user)=>{
+        if(err){
+            console.log(err)
+        }else{
+            if(!user){
+                res.status(401).send("invalid email")
+            }else
+            if(user.password != userData.password)
+            {
+                res.status(401).send('Invalid password')
+            }else{
+                let payload = {subject: user._id}
+                let token = jwt.sign(payload,'secretKey')
+                //console.log(token)
+                //
+                //res.status(200).json(user)
+                sendableData.email=user.email
+                sendableData.token=token
+                console.log(sendableData)
+                res.status(200).send({sendableData})
+                //res.status(200).json(user)
+
             }
         }
     })
@@ -111,7 +165,7 @@ router.get('/special',verifyTocken,(req,res)=>{
         }
         else{
             events = jobs
-            console.log(jobs)
+           // console.log(jobs)
             res.json(events)
         }
     })

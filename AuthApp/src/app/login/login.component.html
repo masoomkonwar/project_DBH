@@ -14,7 +14,11 @@
                         <label for="">Password</label>
                         <input [(ngModel)]="loginUserData.password" name="password" type="password" class="form-control rounded-0" required>
                     </div>
-                    <button (click)="onLogin()" type="button"class="btn btn-success float-right">LOG IN</button>
+                    <div class="form-group">
+                        <input type="checkbox" name="isDev" [(ngModel)]="isDev">Log in as a developer
+                    </div>
+                    <button (click)="onLogin()" *ngIf="!isDev" type="button"class="btn btn-success float-right">LOG IN</button>
+                    <button (click)="onLoginDev()" *ngIf="isDev" type="button"class="btn btn-success float-right">LOG IN AS A DEVELOPER</button>
                 </form>
             </div>
         </div>
